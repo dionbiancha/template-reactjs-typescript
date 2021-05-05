@@ -1,12 +1,13 @@
-name: Deploy to develop
+name: Deploy to Preview Channel
 
 on:
-  push:
-    branches:
-      - develop
+  pull_request:
+  # Optionally configure to run only for specific files. For example:
+  # paths:
+  # - "website/**"
 
 jobs:
-  deploy_live_website:
+  build_and_preview:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -25,16 +26,19 @@ jobs:
         # env:
         #   NODE_AUTH_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
 
+      # - name: Eslint
+      #   run: yarn lint
+
       - name: Build
         run: yarn build
         env:
           CI: false
 
-      - name: Firebase deploy
+      - name: Firebase Preview
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          expires: 10d
           projectId: gh-dark
           target: template-reactjs-typescript
-          channelId: develop
