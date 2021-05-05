@@ -42,3 +42,4 @@ jobs:
           expires: 10d
           projectId: gh-template
           target: template-reactjs-typescript
+          channelId: live
